@@ -1,0 +1,18 @@
+.button {
+  display: block;
+  background-color: #3f4072;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  padding: 5px 10px;
+  margin: 8px auto;
+  
+
+  &:hover {
+    background-color: #6869b6;
+  }
+
+  &:active {
+    background-color: black;
+  }
+}

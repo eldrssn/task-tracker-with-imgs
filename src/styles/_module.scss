@@ -1,0 +1,17 @@
+.module-wrapper {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-color: #00000070;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.module {
+  background-color: black;
+  padding: 20px;
+  border-radius: 15px;
+}
