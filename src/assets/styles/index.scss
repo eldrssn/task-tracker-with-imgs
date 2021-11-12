@@ -1,0 +1,16 @@
+@import './normalize';
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: black;
+  color: white;
+  font-family: Roboro, Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.app {
+  position: relative;
+}
+

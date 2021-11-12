@@ -1,22 +1,17 @@
-import { useSelector } from "react-redux";
-import Header from "./components/Header";
-import Main from "./components/Main";
-import SaveChangesModule from "./components/SaveChangesModule";
-import useSaveState from "./hooks/useSaveState";
-import { stateName } from "./utils";
+import Header from "./components/common/header/";
+import Tracker from "./components/pages/tracker";
+import Main from "./components/pages/tracker/Tracker";
+import { withAppData } from "./hocs/withAppData";
 
 function App() {
 
-  const tracker = useSelector((state) => state);
-  const [isSaveChanges, setIsSaveChanges, saveChanges] = useSaveState(stateName, tracker);
-
   return (
-    <div className="App">
-      <Header saveChanges={saveChanges}/>
-      <Main tracker={tracker}/>
-      {isSaveChanges && <SaveChangesModule setIsSaveChanges={setIsSaveChanges} />}
+    <div className="app">
+      <Header />
+      <Tracker />
+      {/* < ModalSave /> */}
     </div>
   );
 }
 
-export default App;
+export default withAppData(App);
