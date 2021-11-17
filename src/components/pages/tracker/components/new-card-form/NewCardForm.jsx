@@ -1,90 +1,113 @@
-import axios from 'axios';
 import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import classNames from 'classnames/bind';
 import useDebounce from '../../../../../hooks/useDebounce';
 import Button from '../../../../UI/button';
 import Spinner from '../../../../UI/spinner';
-import styles from './new-card-form.scss';
-import { DEBOUNCE_DELAY, defaultCard, URL } from './constants';
-import { getUniqId } from './helpers/getUniqId';
-import { getIdsFromState } from './helpers/getIdsFromState';
-import { checkOnlySpace } from './helpers/checkOnlySpace';
-import { useDispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as actionCreators from '../../../../../store/action-creators';
+import styles from './new-card-form.module.scss';
+import { DEBOUNCE_DELAY, defaultCard } from './constants';
+import { checkOnlySpace, getId } from './helpers';
+import ErrorPopup from '../../../../UI/error-popup';
+import { addCard } from '../../../../../store/reducers/tracker/actions';
+import { request } from '../../../../../utils/api';
+import { selectTracker } from '../../../../../store/reducers/tracker/selectors';
 
-const NewCardForm = ({columnId, setShowCardForm, tracker}) => {
+const cx = classNames.bind(styles);
 
-  const [newCard, setNewCard] = useState(defaultCard);  
+const NewCardForm = ({ columnLabel, setShowNewCardForm }) => {
+  const [newCard, setNewCard] = useState(defaultCard);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const tracker = useSelector(selectTracker);
+  const ref = useRef(null);
 
   const dispatch = useDispatch();
-  const { addCard } = bindActionCreators(actionCreators, dispatch); 
 
-  const getPhoto = () => {
-    const id = getUniqId(getIdsFromState(tracker));
+  const handleSuccess = (response) => {
+    setNewCard({
+      ...defaultCard,
+      id: response.data.id,
+      url: response.data.url,
+    });
+  };
 
-    try {
-      axios.get(URL + id)
-        .then((res) => {
-          setNewCard({
-            ...newCard, 
-            id: res.data.id, 
-            url: res.data.url, 
-            column: columnId
-          })
-        });
-    } catch (err) {
-      throw new Error(err);
-    }
-  }
+  const handleError = (error) => {
+    setErrorMessage(error.message);
+  };
 
-  const onReset = (evt) => {
-    if (evt.target.classList.contains('new-card')) {
-      evt.target.reset(); 
+  const getImgUrl = () => {
+    const id = getId(tracker);
+
+    request({
+      url: id,
+      handleSuccess,
+      handleError,
+    });
+  };
+
+  const handleResetForm = (event) => {
+    if (event.target.classList.contains(cx('new-card'))) {
+      event.target.reset();
     }
     setNewCard(defaultCard);
-    setShowCardForm(false);
-  }
+    setShowNewCardForm(false);
+  };
 
-  const onSubmit = (evt) => {
-    evt.preventDefault();
-    addCard({columnId, newCard});
-    onReset(evt);
-  }
+  const handleSubmitForm = (event) => {
+    event.preventDefault();
+    dispatch(addCard({ columnLabel, newCard }));
+    handleResetForm(event);
+  };
 
   useEffect(() => {
-    getPhoto();
-  }, [])  
+    getImgUrl();
+  }, []);
 
-  const getPhotoDebounsed = useDebounce(getPhoto, DEBOUNCE_DELAY);
+  const handleGetPhotoDebounced = useDebounce(getImgUrl, DEBOUNCE_DELAY);
 
-  const ref = useRef(null);
+  // !TODO: проверить что за магия
   checkOnlySpace(ref.current);
 
+  const handlerNewCardName = (event) => {
+    setNewCard({ ...newCard, name: event.target.value });
+  };
+
+  const handlerNewCardDescription = (event) => {
+    setNewCard({ ...newCard, description: event.target.value });
+  };
+
   return (
-    <form className='new-card' onSubmit={onSubmit} autoComplete="off" >
-      <Button onClick={getPhotoDebounsed} text='Выбрать другое изображение'/>
+    <form
+      className={cx('new-card')}
+      onSubmit={handleSubmitForm}
+      autoComplete="off"
+    >
+      <Button
+        onClick={handleGetPhotoDebounced}
+        title="Выбрать другое изображение"
+      />
 
-      {newCard.url ? <img src={newCard.url} alt="cards cover"/> : <Spinner />}
+      {newCard.url ? <img src={newCard.url} alt="cards cover" /> : <Spinner />}
 
-      <input 
+      <input
         ref={ref}
         value={newCard.name}
-        onChange={evt => setNewCard({...newCard, name: evt.target.value})}
-        minLength='1'
+        onChange={handlerNewCardName}
+        minLength="1"
         type="text"
-        placeholder='Введите название' 
+        placeholder="Введите название"
         required
       />
-      <textarea 
+      <textarea
         value={newCard.description}
-        onChange={evt => setNewCard({...newCard, description: evt.target.value})}
-        type="text"
-        placeholder='Введите описание'
+        onChange={handlerNewCardDescription}
+        placeholder="Введите описание"
       />
-      <div className='new-card_buttons'>
-        <Button type='submit' text='Ок'/>  
-        <Button onClick={onReset} text='Отмена'/>
+      <div className={cx('new-card_buttons')}>
+        <Button type="submit" title="Ок" />
+        <Button onClick={handleResetForm} title="Отмена" />
       </div>
+
+      {errorMessage && <ErrorPopup errorMessage={errorMessage} />}
     </form>
   );
 };

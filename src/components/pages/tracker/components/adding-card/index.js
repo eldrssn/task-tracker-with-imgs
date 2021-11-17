@@ -1,3 +1,3 @@
-import AddingCard from "./AddingCard";
+import AddingCard from './AddingCard';
 
 export default AddingCard;

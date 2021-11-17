@@ -1,17 +1,20 @@
 import React from 'react';
 import Modal from '../../../../UI/modal/Modal';
 
-const ModalSave = ({ isSaveChanges, setIsSaveChanges }) => {
+const ModalSave = ({ isSaveToStorage, setIsSaveToStorage }) => {
+  const handleCloseModal = () => {
+    setIsSaveToStorage(false);
+  };
 
-  const modal = <Modal
-    text='Изменения сохранены' 
-    btn='Ок' 
-    onClick={() => setIsSaveChanges(false)}
-  />
+  const modal = (
+    <Modal
+      title="Изменения сохранены"
+      labelCloseButton="Ок"
+      handleClose={handleCloseModal}
+    />
+  );
 
-  const renderModal = isSaveChanges ? modal : null;
-
-  return renderModal;
+  return isSaveToStorage ? modal : null;
 };
 
-export default ModalSave; 
+export default ModalSave;

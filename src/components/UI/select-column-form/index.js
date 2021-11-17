@@ -1,3 +1,3 @@
-import SelectColumnForm from "./SelectColumnForm";
+import SelectColumnForm from './SelectColumnForm';
 
 export default SelectColumnForm;

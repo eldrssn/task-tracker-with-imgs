@@ -1,8 +1,8 @@
-import { combineReducers } from "redux";
-import { tracker } from "./tracker/trackerReducer";
+import { combineReducers } from 'redux';
+import { tracker } from './tracker';
 
 const rootReducer = combineReducers({
-    tracker,
-})
+  tracker,
+});
 
 export default rootReducer;

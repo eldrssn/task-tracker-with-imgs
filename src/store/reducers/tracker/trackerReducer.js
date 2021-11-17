@@ -1,39 +1,46 @@
-import { initialReduxState } from "../../initialReduxState";
-import { getStateFromLocalStorage } from "./helpers/getStateFromLocalStorage";
-import { types } from "./types";
+import { initialReduxState } from '../../initialReduxState';
+import { getStateFromLocalStorage } from './helpers/getStateFromLocalStorage';
+import { types } from './types';
 
-const initialState = getStateFromLocalStorage(initialReduxState);
+const initialState = getStateFromLocalStorage(initialReduxState.tracker);
 
 const ACTION_HANDLERS = {
   [types.addCard]: (state, action) => {
-    const { columnId, newCard } = action.payload;
-    const currentColumn = state[columnId];
+    const { columnLabel, newCard } = action.payload;
+    const currentColumn = state[columnLabel];
     currentColumn.cards.push(newCard);
 
     return {
       ...state,
-      [columnId]: currentColumn,
+      [columnLabel]: currentColumn,
     };
   },
 
   [types.moveCard]: (state, action) => {
-    const { id, newColumn, column: oldColumn } = action.payload;
+    const { id, newColumnLabel, columnLabel } = action.payload;
 
-    const oldCol = state[oldColumn];
-    const newCol = state[newColumn];
+    const oldColumn = state[columnLabel];
+    const newColumn = state[newColumnLabel];
 
-    const card = oldCol.cards.find((card) => card.id === id);
-    oldCol.cards = oldCol.cards.filter((card) => card.id !== id);
-    newCol.cards.push({ ...card, column: newColumn })
+    const currentCard = oldColumn.cards.find((card) => {
+      return card.id === id;
+    });
+
+    oldColumn.cards = oldColumn.cards.filter((card) => {
+      return card.id !== id;
+    });
+    newColumn.cards.push(currentCard);
 
     return {
       ...state,
-      [oldColumn]: oldCol,
-      [newCol]: newCol,
+      [newColumnLabel]: newColumn,
+      [columnLabel]: oldColumn,
     };
-  }
-}
+  },
+};
 
 export const tracker = (state = initialState, action) => {
-  return ACTION_HANDLERS[action.type] ? ACTION_HANDLERS[action.type](state, action) : state;
-}
+  return ACTION_HANDLERS[action.type]
+    ? ACTION_HANDLERS[action.type](state, action)
+    : state;
+};

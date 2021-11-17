@@ -1,57 +1,52 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import classNames from 'classnames/bind';
 import ArrowButton from '../../../../UI/arrow-button';
 import SelectColumnForm from '../../../../UI/select-column-form';
-import styles from './card.scss';
-import * as actionCreators from '../../../../../store/action-creators';
-import { useDispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import styles from './card.module.scss';
+import { moveCard } from '../../../../../store/reducers/tracker/actions';
 
+const cx = classNames.bind(styles);
 
-const Card = ({card}) => {
-
-  const { url, name, description, column, id } = card;
+const Card = ({ card, columnLabel }) => {
+  const { url, name, description, id } = card;
 
   const dispatch = useDispatch();
-  const { moveCard } = bindActionCreators(actionCreators, dispatch); 
 
-  const [select, setSelect] = useState(false);
-  const [newColumn, setNewColumn] = useState(column);
+  const [showSelect, setShowSelect] = useState(false);
+  const [newColumnLabel, setNewColumnLabel] = useState(columnLabel);
 
-  const onClickOpenSelect = () => {
-    setSelect(true);
-  }
+  const handleSelectToggle = () => {
+    setShowSelect(!showSelect);
+  };
 
-  const closeSelect = () => {
-    setSelect(false);
-  }
+  const handlerChangeColumnLabel = (event) => {
+    setNewColumnLabel(event.target.value);
+  };
 
-  const onSetColumn = (evt) => {
-    setNewColumn(evt.target.value);
-  }
+  const handlerSubmitColumnLabel = (event) => {
+    event.preventDefault();
+    handleSelectToggle();
 
-  const onChooseColumn = () => {
-    closeSelect();
-
-    if (newColumn === column) {
+    if (newColumnLabel === columnLabel) {
       return;
     }
 
-    moveCard({id, newColumn, column})
-  }
-  
-  return (
-    <article className='card'>
+    dispatch(moveCard({ id, newColumnLabel, columnLabel }));
+  };
 
-      {select ? 
-        <SelectColumnForm 
-          column={newColumn} 
-          onChooseColumn={onChooseColumn}
-          onSetColumn={onSetColumn}
-          closeSelect={closeSelect} 
-        /> 
-        : 
-        <ArrowButton onClickOpenSelect={onClickOpenSelect}/>
-      }
+  return (
+    <article className={cx('card')}>
+      {showSelect ? (
+        <SelectColumnForm
+          column={newColumnLabel}
+          handlerSubmitColumnLabel={handlerSubmitColumnLabel}
+          handlerChangeColumnLabel={handlerChangeColumnLabel}
+          handleSelectToggle={handleSelectToggle}
+        />
+      ) : (
+        <ArrowButton handleSelectToggle={handleSelectToggle} />
+      )}
 
       <img height="100px" width="auto" src={url} alt="card's cover" />
       <h5>{name}</h5>

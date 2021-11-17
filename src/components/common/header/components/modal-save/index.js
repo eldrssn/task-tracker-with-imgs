@@ -1,3 +1,3 @@
-import ModalSave from "./ModalSave";
+import ModalSave from './ModalSave';
 
 export default ModalSave;

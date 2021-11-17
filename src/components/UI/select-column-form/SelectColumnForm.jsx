@@ -1,19 +1,29 @@
 import React from 'react';
-import Button from '../button/Button';
-import styles from './select-column-form.scss';
+import classNames from 'classnames/bind';
+import Button from '../button';
+import styles from './select-column-form.module.scss';
 
-const SelectColumnForm = ({ column, onChooseColumn, onSetColumn, closeSelect }) => {
+const cx = classNames.bind(styles);
 
+const SelectColumnForm = ({
+  column,
+  handlerSubmitColumnLabel,
+  handlerChangeColumnLabel,
+  handleSelectToggle,
+}) => {
   return (
-    <form className='card_mover'>
-      <select name='type' value={column} onChange={onSetColumn}>
-        <option value='' disabled>Куда переместить?</option>
+    <form className={cx('card_mover')} onSubmit={handlerSubmitColumnLabel}>
+      <select name="type" value={column} onChange={handlerChangeColumnLabel}>
+        <option value="" disabled>
+          Куда переместить?
+        </option>
         <option value="todo">Сделать</option>
         <option value="inprogress">В процессе</option>
         <option value="done">Сделано</option>
       </select>
-      <Button onClick={onChooseColumn} text="Ok" />
-      <Button onClick={closeSelect} text="Отмена" />
+
+      <Button type="submit" title="Ok" />
+      <Button onClick={handleSelectToggle} title="Отмена" />
     </form>
   );
 };

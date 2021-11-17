@@ -1,36 +1,21 @@
 import React from 'react';
-import Column from './components/column';
-import styles from './tracker.css';
-
-import cn from 'classnames';
 import { useSelector } from 'react-redux';
-// import styles from './main';
-// import { useDispatch } from 'react-redux';
-// import { useSelector } from 'react-redux';
-// import { selectUser } from '../store/users/selectors'; 
+import classNames from 'classnames/bind';
+import Column from './components/column';
+import styles from './tracker.module.scss';
+import { selectTracker } from '../../../store/reducers/tracker/selectors';
 
-// const selectUser = state => state.counter;
+const cx = classNames.bind(styles);
 
 const Tracker = () => {
-  // const dispatch =  useDispatch();
-  // const users = useSelector(selectUser);
+  const tracker = useSelector(selectTracker);
 
-  // useEffect(() => {
-  //   dispatch(fetchUsers(payload))
-  // }, [])
-  // className={cn(styles.wrapper)}
-
-  const tracker = useSelector((state) => state.tracker);
-
-  console.log(cn());
   return (
-    <main className='wrapper'>
-      {Object.keys(tracker).map(column => {
-        return <Column 
-          column={tracker[column]} 
-          tracker={tracker} 
-          key={tracker[column].id}
-        />
+    <main className={cx('wrapper')}>
+      {Object.keys(tracker).map((column) => {
+        return (
+          <Column column={tracker[column]} key={tracker[column].columnLabel} />
+        );
       })}
     </main>
   );

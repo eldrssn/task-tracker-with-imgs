@@ -1,21 +1,24 @@
 import React from 'react';
+import classNames from 'classnames/bind';
 import Button from '../button/Button';
-// import cn from 'classnames';
-import styles from './modal.scss';
+import styles from './modal.module.scss';
 
-const Modal = ({text, btn, onClick}) => {
+const cx = classNames.bind(styles);
 
-  const onClickArea = (evt) => {
-    if (evt.target.className === 'module-wrapper') {
-      onClick();
+const Modal = ({ title, labelCloseButton, handleClose }) => {
+  const modalWrapperClassName = cx('modal-wrapper');
+
+  const onClickArea = (event) => {
+    if (event.target.className === modalWrapperClassName) {
+      handleClose();
     }
-  }  
+  };
 
   return (
-    <section onClick={onClickArea} className='modal-wrapper'>
-      <div className='modal'> 
-        <h5>{text}</h5>
-        <Button onClick={onClick} text={btn} />
+    <section onClick={onClickArea} className={modalWrapperClassName}>
+      <div className={cx('modal')}>
+        <h5>{title}</h5>
+        <Button onClick={handleClose} title={labelCloseButton} />
       </div>
     </section>
   );

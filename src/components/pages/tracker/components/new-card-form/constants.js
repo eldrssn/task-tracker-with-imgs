@@ -9,5 +9,4 @@ export const defaultCard = {
   name: '',
   description: '',
   url: '',
-  column: ''
-}
+};

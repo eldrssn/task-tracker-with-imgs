@@ -1,9 +1,14 @@
 import React from 'react';
-import styles from './button.scss'
+import classNames from 'classnames/bind';
+import styles from './button.module.scss';
 
-const Button = ({ onClick, text, ...other }) => {
+const cx = classNames.bind(styles);
+
+const Button = ({ onClick, title, ...other }) => {
   return (
-    <button className='button' type='button' onClick={onClick} {...other} >{text}</button>
+    <button className={cx('button')} type="button" onClick={onClick} {...other}>
+      {title}
+    </button>
   );
 };
 

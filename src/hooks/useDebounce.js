@@ -10,10 +10,14 @@ export default function useDebounce(func, delay, cleanUp = false) {
     }
   }
 
-  useEffect(() => (cleanUp ? clearTimer : null), [cleanUp]);
+  useEffect(() => {
+    return cleanUp ? clearTimer : null;
+  }, [cleanUp]);
 
   return (...args) => {
     clearTimer();
-    timeoutRef.current = setTimeout(() => func(...args), delay);
+    timeoutRef.current = setTimeout(() => {
+      return func(...args);
+    }, delay);
   };
 }
