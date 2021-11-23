@@ -1,8 +1,15 @@
+@import '../../../../../assets/styles/vars';
+
+.hide-modal {
+  display: none;
+}
+
 .modal-wrapper {
+  display: block;
   position: absolute;
   width: 100vw;
   height: 100vh;
-  background-color: #00000070;
+  background-color: $transparent-background-color;
   top: 0;
   left: 0;
   display: flex;
@@ -12,7 +19,7 @@
 }
 
 .modal {
-  background-color: black;
+  background-color: $primary-background-color;
   padding: 20px;
   border-radius: 15px;
   z-index: 3;

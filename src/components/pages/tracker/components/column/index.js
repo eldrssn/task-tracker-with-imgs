@@ -1,3 +1,1 @@
-import Column from './Column';
-
-export default Column;
+export { Column } from './Column';

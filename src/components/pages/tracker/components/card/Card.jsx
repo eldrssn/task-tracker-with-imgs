@@ -1,51 +1,48 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import classNames from 'classnames/bind';
-import ArrowButton from '../../../../UI/arrow-button';
-import SelectColumnForm from '../../../../UI/select-column-form';
-import styles from './card.module.scss';
+import { ArrowIcon } from '../../../../UI/arrow-icon';
+import { SelectColumnForm } from '../select-column-form';
+import styles from './Card.module.scss';
 import { moveCard } from '../../../../../store/reducers/tracker/actions';
 
-const cx = classNames.bind(styles);
+export const Card = ({ card, columnType }) => {
+  const [showSelect, setShowSelect] = useState(false);
+  const [newColumnType, setNewColumnType] = useState(columnType);
 
-const Card = ({ card, columnLabel }) => {
   const { url, name, description, id } = card;
 
   const dispatch = useDispatch();
-
-  const [showSelect, setShowSelect] = useState(false);
-  const [newColumnLabel, setNewColumnLabel] = useState(columnLabel);
 
   const handleSelectToggle = () => {
     setShowSelect(!showSelect);
   };
 
-  const handlerChangeColumnLabel = (event) => {
-    setNewColumnLabel(event.target.value);
+  const handlerChangeColumnType = (event) => {
+    setNewColumnType(event.target.value);
   };
 
-  const handlerSubmitColumnLabel = (event) => {
+  const handlerSubmitColumnType = (event) => {
     event.preventDefault();
     handleSelectToggle();
 
-    if (newColumnLabel === columnLabel) {
+    if (newColumnType === columnType) {
       return;
     }
 
-    dispatch(moveCard({ id, newColumnLabel, columnLabel }));
+    dispatch(moveCard({ id, newColumnType }));
   };
 
   return (
-    <article className={cx('card')}>
+    <article className={styles.card}>
       {showSelect ? (
         <SelectColumnForm
-          column={newColumnLabel}
-          handlerSubmitColumnLabel={handlerSubmitColumnLabel}
-          handlerChangeColumnLabel={handlerChangeColumnLabel}
+          column={newColumnType}
+          handlerSubmitColumnType={handlerSubmitColumnType}
+          handlerChangeColumnType={handlerChangeColumnType}
           handleSelectToggle={handleSelectToggle}
         />
       ) : (
-        <ArrowButton handleSelectToggle={handleSelectToggle} />
+        <ArrowIcon handleSelectToggle={handleSelectToggle} />
       )}
 
       <img height="100px" width="auto" src={url} alt="card's cover" />
@@ -54,5 +51,3 @@ const Card = ({ card, columnLabel }) => {
     </article>
   );
 };
-
-export default Card;

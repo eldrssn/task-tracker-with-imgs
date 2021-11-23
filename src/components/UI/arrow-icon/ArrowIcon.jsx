@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ArrowButton = ({ handleSelectToggle }) => {
+export const ArrowIcon = ({ handleSelectToggle }) => {
   return (
     <span onClick={handleSelectToggle}>
       <svg
@@ -20,5 +20,3 @@ const ArrowButton = ({ handleSelectToggle }) => {
     </span>
   );
 };
-
-export default ArrowButton;

@@ -1,29 +1,31 @@
+@import '../../../../../assets/styles/_vars';
+
 .column {
-    display: block;
-    background-color: #262626;
-    border-radius: 16px;
-    margin: 15px;
-    padding-bottom: 5px;
-    height: calc(100vh - 120px);
+  display: block;
+  background-color: $secondary-background-color;
+  border-radius: 16px;
+  margin: 15px;
+  padding-bottom: 5px;
+  height: calc(100vh - 120px);
+}
+
+.column-name {
+  font-size: 22px;
+  margin: 15px 25px;
+}
+
+.cards_wrapper {
+  max-height: calc(100vh - 180px);
+  margin: 5px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    border-radius: 9em;
+    background-color: $secondary-background-color;
   }
-  
-  .column_name {
-    font-size: 22px;
-    margin: 15px 25px;
+  &::-webkit-scrollbar-thumb {
+    background-color: $primary-background-color;
+    border-radius: 9em;
   }
-  
-  .cards_wrapper {
-    max-height: calc(100vh - 180px);
-    margin: 5px;
-    overflow-y: auto;
-    
-    &::-webkit-scrollbar {
-      width: 8px; 
-      border-radius: 9em;
-      background-color: #262626;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: black;
-      border-radius: 9em;
-    }
-  }
+}

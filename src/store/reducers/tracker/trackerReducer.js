@@ -1,40 +1,41 @@
+import { TRACKER_KEY } from '../../../utils/helpers/constants';
+import { getValueFromLocalStorage } from '../../../utils/helpers/localStorageHelpers';
 import { initialReduxState } from '../../initialReduxState';
-import { getStateFromLocalStorage } from './helpers/getStateFromLocalStorage';
 import { types } from './types';
 
-const initialState = getStateFromLocalStorage(initialReduxState.tracker);
+const initialState = getValueFromLocalStorage(
+  TRACKER_KEY,
+  initialReduxState.tracker
+);
 
 const ACTION_HANDLERS = {
   [types.addCard]: (state, action) => {
-    const { columnLabel, newCard } = action.payload;
-    const currentColumn = state[columnLabel];
-    currentColumn.cards.push(newCard);
+    const newCard = action.payload;
 
     return {
       ...state,
-      [columnLabel]: currentColumn,
+      cards: {
+        ...state.cards,
+        [newCard.id]: newCard,
+      },
+      ids: [...state.ids, newCard.id],
     };
   },
 
   [types.moveCard]: (state, action) => {
-    const { id, newColumnLabel, columnLabel } = action.payload;
+    const { id, newColumnType } = action.payload;
 
-    const oldColumn = state[columnLabel];
-    const newColumn = state[newColumnLabel];
-
-    const currentCard = oldColumn.cards.find((card) => {
-      return card.id === id;
-    });
-
-    oldColumn.cards = oldColumn.cards.filter((card) => {
-      return card.id !== id;
-    });
-    newColumn.cards.push(currentCard);
+    const currentCard = state.cards[id];
 
     return {
       ...state,
-      [newColumnLabel]: newColumn,
-      [columnLabel]: oldColumn,
+      cards: {
+        ...state.cards,
+        [id]: {
+          ...currentCard,
+          type: newColumnType,
+        },
+      },
     };
   },
 };

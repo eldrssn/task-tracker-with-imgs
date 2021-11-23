@@ -1,3 +1,1 @@
-import ErrorPopup from './ErrorPopup';
-
-export default ErrorPopup;
+export { ErrorPopup } from './ErrorPopup';

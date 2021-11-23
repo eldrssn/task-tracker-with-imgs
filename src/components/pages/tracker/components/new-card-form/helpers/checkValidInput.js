@@ -1,11 +1,12 @@
-export const checkOnlySpace = (input) => {
+export const checkValidInput = (input) => {
   const onInputChange = () => {
-    if (!(input.value.trim().length > 0)) {
+    if (!input.value.trim()) {
       input.setCustomValidity('Поле не должно содержать только пробелы');
     } else {
       input.setCustomValidity('');
     }
     input.reportValidity();
+
     input.removeEventListener('input', onInputChange);
   };
 

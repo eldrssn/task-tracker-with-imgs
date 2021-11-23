@@ -1,15 +1,17 @@
-.wrapper {
-	height: 50px;
-	color: white;
-	background-color: red;
-	position: absolute;
-	top: 0;
-	right: 0;
-	width: 100%;
-	text-align: center;
+@import '../../../assets/styles/_vars';
 
-	display: flex;
-	font-weight: 700;
-	align-items: center;
-	justify-content: center;
+.wrapper {
+  height: 70px;
+  color: $font-primary-color;
+  background-color: $error-bg-color;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  text-align: center;
+
+  display: flex;
+  font-weight: 700;
+  align-items: center;
+  justify-content: center;
 }

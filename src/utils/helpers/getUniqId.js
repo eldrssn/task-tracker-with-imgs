@@ -1,11 +1,10 @@
-import { getIdsFromState } from './getIdsFromState';
+import { MIN_ID, MAX_ID } from './constants';
 
 const getRandomId = (min, max) => {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
-export const getUniqId = (state, min, max) => {
-  const ids = getIdsFromState(state);
+export const getUniqId = (ids, min = MIN_ID, max = MAX_ID) => {
   const id = getRandomId(min, max);
 
   if (!ids.includes(id)) {

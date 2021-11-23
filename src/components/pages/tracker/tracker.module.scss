@@ -3,5 +3,5 @@
   margin: 5px auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  max-height: calc(100vh - 100px);
+  max-height: calc(100vh - 1px);
 }

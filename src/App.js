@@ -1,5 +1,5 @@
-import Header from './components/common/header';
-import Tracker from './components/pages/tracker';
+import { Header } from './components/common/header';
+import { Tracker } from './components/pages/tracker';
 import { withAppData } from './hocs/withAppData';
 
 const App = () => {

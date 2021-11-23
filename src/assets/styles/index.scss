@@ -1,16 +1,16 @@
 @import './normalize';
+@import './vars';
 
 body {
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: black;
-  color: white;
-  font-family: Roboro, Arial, sans-serif;
+  background-color: $primary-background-color;
+  color: $font-primary-color;
+  font-family: $main-font;
   box-sizing: border-box;
 }
 
 .app {
   position: relative;
 }
-

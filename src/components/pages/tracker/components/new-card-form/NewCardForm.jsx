@@ -1,24 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import classNames from 'classnames/bind';
-import useDebounce from '../../../../../hooks/useDebounce';
-import Button from '../../../../UI/button';
-import Spinner from '../../../../UI/spinner';
-import styles from './new-card-form.module.scss';
-import { DEBOUNCE_DELAY, defaultCard } from './constants';
-import { checkOnlySpace, getId } from './helpers';
-import ErrorPopup from '../../../../UI/error-popup';
+import { useDebounce } from '../../../../../hooks/useDebounce';
+import { Button } from '../../../../UI/button';
+import { Spinner } from '../../../../UI/spinner';
+import styles from './New-card-form.module.scss';
+import {
+  DEBOUNCE_DELAY,
+  defaultCard,
+} from '../../../../../utils/helpers/constants';
+import { ErrorPopup } from '../../../../UI/error-popup';
 import { addCard } from '../../../../../store/reducers/tracker/actions';
 import { request } from '../../../../../utils/api';
-import { selectTracker } from '../../../../../store/reducers/tracker/selectors';
+import { selectCardIds } from '../../../../../store/reducers/tracker/selectors';
+import { checkValidInput } from './helpers/checkValidInput';
+import { getUniqId } from '../../../../../utils/helpers/getUniqId';
 
-const cx = classNames.bind(styles);
-
-const NewCardForm = ({ columnLabel, setShowNewCardForm }) => {
+export const NewCardForm = ({ columnType, setShowNewCardForm }) => {
   const [newCard, setNewCard] = useState(defaultCard);
   const [errorMessage, setErrorMessage] = useState(null);
-  const tracker = useSelector(selectTracker);
-  const ref = useRef(null);
+  const ids = useSelector(selectCardIds);
+  const inputRef = useRef(null);
+  const newCardStyle = styles['new-card'];
+  const formRef = useRef();
 
   const dispatch = useDispatch();
 
@@ -27,6 +30,7 @@ const NewCardForm = ({ columnLabel, setShowNewCardForm }) => {
       ...defaultCard,
       id: response.data.id,
       url: response.data.url,
+      type: columnType,
     });
   };
 
@@ -35,7 +39,7 @@ const NewCardForm = ({ columnLabel, setShowNewCardForm }) => {
   };
 
   const getImgUrl = () => {
-    const id = getId(tracker);
+    const id = getUniqId(ids);
 
     request({
       url: id,
@@ -45,7 +49,7 @@ const NewCardForm = ({ columnLabel, setShowNewCardForm }) => {
   };
 
   const handleResetForm = (event) => {
-    if (event.target.classList.contains(cx('new-card'))) {
+    if (event.target.classList.contains(newCardStyle)) {
       event.target.reset();
     }
     setNewCard(defaultCard);
@@ -54,7 +58,7 @@ const NewCardForm = ({ columnLabel, setShowNewCardForm }) => {
 
   const handleSubmitForm = (event) => {
     event.preventDefault();
-    dispatch(addCard({ columnLabel, newCard }));
+    dispatch(addCard(newCard));
     handleResetForm(event);
   };
 
@@ -64,22 +68,18 @@ const NewCardForm = ({ columnLabel, setShowNewCardForm }) => {
 
   const handleGetPhotoDebounced = useDebounce(getImgUrl, DEBOUNCE_DELAY);
 
-  // !TODO: проверить что за магия
-  checkOnlySpace(ref.current);
+  checkValidInput(inputRef.current);
 
-  const handlerNewCardName = (event) => {
-    setNewCard({ ...newCard, name: event.target.value });
-  };
-
-  const handlerNewCardDescription = (event) => {
-    setNewCard({ ...newCard, description: event.target.value });
+  const handlerNewCardInput = (event) => {
+    setNewCard({ ...newCard, [event.target.name]: event.target.value });
   };
 
   return (
     <form
-      className={cx('new-card')}
+      className={newCardStyle}
       onSubmit={handleSubmitForm}
       autoComplete="off"
+      ref={formRef}
     >
       <Button
         onClick={handleGetPhotoDebounced}
@@ -89,20 +89,22 @@ const NewCardForm = ({ columnLabel, setShowNewCardForm }) => {
       {newCard.url ? <img src={newCard.url} alt="cards cover" /> : <Spinner />}
 
       <input
-        ref={ref}
+        ref={inputRef}
         value={newCard.name}
-        onChange={handlerNewCardName}
+        name="name"
+        onChange={handlerNewCardInput}
         minLength="1"
         type="text"
         placeholder="Введите название"
         required
       />
       <textarea
+        name="description"
         value={newCard.description}
-        onChange={handlerNewCardDescription}
+        onChange={handlerNewCardInput}
         placeholder="Введите описание"
       />
-      <div className={cx('new-card_buttons')}>
+      <div className={styles['new-card_buttons']}>
         <Button type="submit" title="Ок" />
         <Button onClick={handleResetForm} title="Отмена" />
       </div>
@@ -111,5 +113,3 @@ const NewCardForm = ({ columnLabel, setShowNewCardForm }) => {
     </form>
   );
 };
-
-export default NewCardForm;

@@ -1,3 +1,1 @@
-import devStore from './configureStore.dev';
-
-export { devStore };
+export { devStore } from './configureStore.dev';

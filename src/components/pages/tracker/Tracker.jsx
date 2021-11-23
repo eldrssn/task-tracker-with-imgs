@@ -1,24 +1,25 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import classNames from 'classnames/bind';
-import Column from './components/column';
-import styles from './tracker.module.scss';
-import { selectTracker } from '../../../store/reducers/tracker/selectors';
+import { Column } from './components/column';
+import styles from './Tracker.module.scss';
+import { columns } from '../../../utils/helpers/constants';
+import { selectCardsByType } from '../../../store/reducers/tracker/selectors';
 
-const cx = classNames.bind(styles);
-
-const Tracker = () => {
-  const tracker = useSelector(selectTracker);
+export const Tracker = () => {
+  const cardsByType = useSelector(selectCardsByType);
 
   return (
-    <main className={cx('wrapper')}>
-      {Object.keys(tracker).map((column) => {
+    <main className={styles.wrapper}>
+      {columns.map(({ key, title }) => {
         return (
-          <Column column={tracker[column]} key={tracker[column].columnLabel} />
+          <Column
+            key={key}
+            columnType={key}
+            columnName={title}
+            cards={cardsByType[key]}
+          />
         );
       })}
     </main>
   );
 };
-
-export default Tracker;

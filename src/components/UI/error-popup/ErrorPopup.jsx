@@ -1,30 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import classNames from 'classnames/bind';
+import React, { useState } from 'react';
 import styles from './error-popup.module.scss';
 import TIMEOUT_DELAY from './constants';
+import { useTimeout } from '../../../hooks/useTimeout';
 
-const cx = classNames.bind(styles);
-
-const ErrorPopup = ({ errorMessage }) => {
+export const ErrorPopup = ({ errorMessage }) => {
   const [showPopup, setShowPopup] = useState(true);
+  const handlerClosePopup = () => setShowPopup(false);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowPopup(false);
-    }, TIMEOUT_DELAY);
+  useTimeout(handlerClosePopup, TIMEOUT_DELAY);
 
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
-
-  const popup = (
-    <div className={cx('wrapper')}>
-      <p>{errorMessage}</p>
-    </div>
+  return (
+    showPopup && (
+      <div className={styles.wrapper}>
+        <p>{errorMessage}</p>
+      </div>
+    )
   );
-
-  return showPopup ? popup : null;
 };
-
-export default ErrorPopup;

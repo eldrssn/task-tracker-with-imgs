@@ -1,26 +1,19 @@
 import React from 'react';
-import classNames from 'classnames/bind';
-import AddingCard from '../adding-card';
-import Card from '../card';
-import styles from './column.module.scss';
+import { Card } from '../card';
+import styles from './Column.module.scss';
+import { AddingCard } from '../adding-card';
 
-const cx = classNames.bind(styles);
-
-const Column = ({ column }) => {
-  const { columnName, cards, columnLabel } = column;
-
+export const Column = ({ columnName, columnType, cards = [] }) => {
   return (
-    <section className={cx('column')}>
-      <h3 className={cx('column_name')}>{columnName}</h3>
-      <div className={cx('cards_wrapper')}>
+    <section className={styles.column}>
+      <h3 className={styles['column-name']}>{columnName}</h3>
+      <div className={styles.cards_wrapper}>
         {cards.map((card) => {
-          return <Card key={card.id} card={card} columnLabel={columnLabel} />;
+          return <Card key={card.id} card={card} columnType={columnType} />;
         })}
 
-        <AddingCard columnLabel={columnLabel} />
+        <AddingCard columnType={columnType} />
       </div>
     </section>
   );
 };
-
-export default Column;

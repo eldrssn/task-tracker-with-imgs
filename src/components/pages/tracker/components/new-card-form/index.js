@@ -1,3 +1,1 @@
-import NewCardForm from './NewCardForm';
-
-export default NewCardForm;
+export { NewCardForm } from './NewCardForm';

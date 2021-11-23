@@ -1,33 +1,40 @@
 import React from 'react';
-import classNames from 'classnames/bind';
 import { useSelector } from 'react-redux';
-import ModalSave from './components/modal-save';
-import useSaveToStorage from '../../../hooks/useSaveToStorage';
-import Button from '../../UI/button/Button';
-import styles from './header.module.scss';
+import { Button } from '../../UI/button/Button';
+import styles from './Header.module.scss';
 import { selectTracker } from '../../../store/reducers/tracker/selectors';
-import TRACKER_STATE_NAME from './constants';
+import { Modal } from './components/modal';
+import { TRACKER_KEY } from '../../../utils/helpers/constants';
+import { setValueToLocalStorage } from '../../../utils/helpers/localStorageHelpers';
 
-const cx = classNames.bind(styles);
-
-const Header = () => {
+export const Header = () => {
   const tracker = useSelector(selectTracker);
-  const [isSaveToStorage, setIsSaveToStorage, handleSaveToStorage] =
-    useSaveToStorage(TRACKER_STATE_NAME, tracker);
+
+  let openModalFunc;
+
+  const getOpenModalFunc = (openModal) => {
+    openModalFunc = openModal;
+  };
+
+  const handlerSaveValueToStorage = () => {
+    const isSavedSuccess = setValueToLocalStorage(TRACKER_KEY, tracker);
+
+    if (isSavedSuccess && typeof openModalFunc === 'function') {
+      openModalFunc();
+    }
+  };
 
   return (
     <>
-      <header className={cx('header')}>
+      <header className={styles.header}>
         <h1>Task Tracker</h1>
-        <Button onClick={handleSaveToStorage} title="Сохранить изменения" />
+        <Button
+          onClick={handlerSaveValueToStorage}
+          title="Сохранить изменения"
+        />
       </header>
 
-      <ModalSave
-        isSaveToStorage={isSaveToStorage}
-        setIsSaveToStorage={setIsSaveToStorage}
-      />
+      <Modal getOpenModalFunc={getOpenModalFunc} />
     </>
   );
 };
-
-export default Header;

@@ -1,6 +1,8 @@
+@import '../../../../../assets/styles/_vars';
+
 .card {
   position: relative;
-  background-color: #6a6dcd;
+  background-color: $card-background-color;
   margin: 15px 10px;
   border-radius: 16px;
   overflow: hidden;
