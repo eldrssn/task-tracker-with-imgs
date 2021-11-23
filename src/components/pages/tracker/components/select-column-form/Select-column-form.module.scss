@@ -1,0 +1,18 @@
+@import '../../../../../assets/styles/_vars';
+
+.card_mover {
+  background-color: $select-column-bg-color;
+  position: absolute;
+  padding: 5px;
+  border-radius: 10px;
+  top: 10px;
+  right: 10px;
+  width: 150px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+
+  select {
+    width: 100%;
+  }
+}
